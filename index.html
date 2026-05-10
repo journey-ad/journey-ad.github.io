@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,8 89,30 89,72 50,94 11,72 11,30' fill='none' stroke='%23888' stroke-width='8' stroke-linejoin='round'/></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>a demo site.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        paper: '#fafaf8',
+        ink: '#1a1a1a',
+        'ink-dim': '#6b6b6b',
+        'ink-fade': '#b0b0a8',
+        rule: '#e5e3dc',
+      },
+      fontFamily: {
+        display: ['Syne', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        body: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
+      },
+      animation: {
+        'row-in': 'rowIn 0.45s both',
+      },
+      keyframes: {
+        rowIn: {
+          '0%': { opacity: '0', transform: 'translateY(6px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-paper text-ink font-body min-h-screen flex justify-center">
+<div id="app" class="w-full">
+  <main class="w-full max-w-[840px] mx-auto pt-[10vh] pb-[6vh] px-[6vw] flex flex-col gap-20 max-sm:pt-[8vh] max-sm:pb-[5vh] max-sm:px-[5vw] max-sm:gap-12">
+
+    <!-- Header -->
+    <header class="flex justify-between items-end pb-8 border-b border-rule max-sm:flex-col max-sm:items-start max-sm:gap-[0.35rem]">
+      <h1 class="font-display font-semibold text-[clamp(1.3rem,2.2vw,1.6rem)] tracking-[-0.01em] text-ink">
+        a demo <em class="not-italic text-ink-dim font-normal">site</em>
+      </h1>
+      <span class="font-display text-[0.7rem] font-medium tracking-[0.08em] uppercase text-ink-dim">
+        {{ countText }}
+      </span>
+    </header>
+
+    <!-- Note -->
+    <p class="text-[1.3rem] leading-[1.6] text-ink-dim max-w-[36rem] max-sm:text-[1.15rem]">
+      An index of public repositories, updated on arrival.
+    </p>
+
+    <!-- Catalog -->
+    <section id="catalog" class="flex flex-col scroll-mt-[6vh]">
+      <div class="grid grid-cols-[1fr_2fr] gap-8 pb-[0.85rem] border-b border-rule max-sm:grid-cols-1 max-sm:gap-1">
+        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">Project</span>
+        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">Description</span>
+      </div>
+
+      <!-- Loading -->
+      <div v-if="loading" class="py-8 text-[0.95rem] text-ink-fade italic">Loading&hellip;</div>
+
+      <!-- Error -->
+      <div v-else-if="error" class="py-8 text-[0.95rem] text-[#b66]">Unable to fetch the index. Try again shortly.</div>
+
+      <!-- Empty -->
+      <div v-else-if="!repos.length" class="py-8 text-[0.95rem] text-ink-fade italic">No affiliated projects found.</div>
+
+      <!-- Rows -->
+      <div v-for="(r, i) in repos" :key="r.id"
+           class="grid grid-cols-[1fr_2fr] gap-8 py-[1.05rem] border-b border-dotted border-rule animate-row-in max-sm:grid-cols-1 max-sm:gap-1"
+           :style="{ animationDelay: (0.03 + i * 0.04) + 's' }">
+        <span class="font-medium text-[1.05rem]">
+          <a :href="repoPreviewUrl(r)" target="_blank" class="text-ink no-underline transition-colors duration-200 hover:text-[#999]">{{ r.name }}</a>
+        </span>
+        <div>
+          <div class="text-[0.95rem] leading-[1.55] text-ink-dim">{{ truncateDesc(r.description) }}</div>
+          <div v-if="metaParts(r).length" class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-[0.55rem] font-display text-[0.65rem] font-medium tracking-[0.04em] uppercase text-ink-fade">
+            <template v-for="(p, pi) in metaParts(r)" :key="pi">
+              <!-- language -->
+              <span v-if="p.t === 'lang'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap">
+                <span class="inline-block w-[7px] h-[7px] rounded-full flex-shrink-0" :style="{ background: p.color }"></span>{{ p.name }}
+              </span>
+              <!-- stars -->
+              <span v-else-if="p.t === 'stars'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap">★ {{ p.count }}</span>
+              <!-- topic tag -->
+              <span v-else-if="p.t === 'tag'" class="inline-block px-[0.55em] py-[0.15em] border border-rule rounded-[2px] text-[0.6rem] tracking-[0.06em] text-ink-dim">{{ p.name }}</span>
+              <!-- time -->
+              <span v-else-if="p.t === 'time'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap" :title="p.title">{{ p.display }}</span>
+              <!-- source -->
+              <a v-else-if="p.t === 'source'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap text-ink-dim no-underline transition-colors duration-200 hover:text-ink" :href="p.url" target="_blank">source ↗</a>
+            </template>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pagination -->
+      <div v-if="!loading && !error && repos.length" class="flex justify-center items-center gap-6">
+        <button @click="goPage(page - 1)" :disabled="page <= 1" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Prev</button>
+        <span class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim">Page {{ page }} / {{ totalPages }}</span>
+        <button @click="goPage(page + 1)" :disabled="page >= totalPages && !hasMoreApi" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Next</button>
+      </div>
+
+    <!-- Footer -->
+    <footer class="flex justify-between items-baseline pt-6 border-t border-rule max-sm:flex-col max-sm:gap-3">
+      <div class="flex gap-8 max-sm:gap-6">
+        <a href="/" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Index</a>
+        <template v-if="CONFIG.email">
+          <a :href="'mailto:' + CONFIG.email" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Letter</a>
+        </template>
+        <template v-if="CONFIG.source">
+          <a :href="CONFIG.source" target="_blank" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Source</a>
+        </template>
+      </div>
+      <span class="text-[0.8rem] text-ink-fade italic">Set by hand.</span>
+    </footer>
+
+  </main>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+(function () {
+  var LANG_COLORS = {
+    JavaScript:'#f1e05a', TypeScript:'#3178c6', Python:'#3572A5', Go:'#00ADD8',
+    Rust:'#dea584', Java:'#b07219', Ruby:'#701516', C:'#555555', 'C++':'#f34b7d',
+    'C#':'#178600', PHP:'#4F5D95', Swift:'#F05138', Kotlin:'#A97BFF',
+    Dart:'#00B4AB', Elixir:'#6e4a7e', Clojure:'#db5855', Haskell:'#5e5086',
+    Lua:'#000080', Zig:'#ec915c', Shell:'#89e051', HTML:'#e34c26', CSS:'#563d7c',
+    SCSS:'#c6538c', Vue:'#41b883', Svelte:'#ff3e00', MDX:'#fcb32c',
+    Nix:'#7e7eff', Dockerfile:'#384d54', Makefile:'#427819', R:'#198CE7',
+    Julia:'#a270ba', Scala:'#c22d40', Erlang:'#B83998', OCaml:'#3be133'
+  };
+
+  var CONFIG = {
+    user: 'journey-ad',
+    site: 'https://gh.ovo.re/',
+    email: 'i@ovo.re',
+    source: 'https://github.com/journey-ad/journey-ad.github.io',
+    cacheKey: 'gh-pages-index',
+    cacheTtl: 6 * 60 * 60 * 1000, // 6 hours
+    // return false to exclude a repo from the index
+    includeRepo: function (repo) {
+      return !['journey-ad.github.io', 'ovo.re'].includes(repo.name);
+    }
+  };
+
+  var API = 'https://api.github.com/users/' + CONFIG.user + '/repos?type=owner&per_page=100&sort=created';
+  function isOvoHomepage(url) {
+	    if (!url) return false;
+	    try {
+	      var hostname = new URL(url).hostname;
+	      return hostname === 'ovo.re' || hostname.endsWith('.ovo.re');
+	    } catch (_) { return false; }
+  }
+
+  function timeAgo(dateStr) {
+    var now = Date.now();
+    var then = new Date(dateStr).getTime();
+    var diff = now - then;
+    var mins = Math.floor(diff / 60000);
+    if (mins < 1)  return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    var hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + 'h ago';
+    var days = Math.floor(hours / 24);
+    if (days < 30) return days + 'd ago';
+    var months = Math.floor(days / 30);
+    if (months < 12) return months + 'mo ago';
+    return Math.floor(months / 12) + 'y ago';
+  }
+
+  function formatDate(dateStr) {
+    var d = new Date(dateStr);
+    var yyyy = d.getFullYear();
+    var MM   = ('0' + (d.getMonth() + 1)).slice(-2);
+    var dd   = ('0' + d.getDate()).slice(-2);
+    var hh   = ('0' + d.getHours()).slice(-2);
+    var mm   = ('0' + d.getMinutes()).slice(-2);
+    var ss   = ('0' + d.getSeconds()).slice(-2);
+    return yyyy + '-' + MM + '-' + dd + ' ' + hh + ':' + mm + ':' + ss;
+  }
+
+  function tryCache() {
+    try {
+      var raw = localStorage.getItem(CONFIG.cacheKey);
+      if (!raw) return null;
+      var entry = JSON.parse(raw);
+      if (Date.now() - entry.ts > CONFIG.cacheTtl) return null;
+      return entry.data;
+    } catch (_) { return null; }
+  }
+
+  var app = Vue.createApp({
+    data: function () {
+      return {
+        allRepos: [],
+        repos: [],
+        loading: true,
+        error: false,
+        page: 1,
+        perPage: 10,
+        apiPage: 1,
+        hasMoreApi: false,
+        CONFIG: CONFIG,
+      };
+    },
+    computed: {
+      totalPages: function () {
+        return Math.ceil(this.allRepos.length / this.perPage) || 1;
+      },
+      countText: function () {
+        var n = this.allRepos.length;
+        return n + ' project' + (n !== 1 ? 's' : '');
+      }
+    },
+    methods: {
+      repoPreviewUrl: function (r) {
+        return isOvoHomepage(r.homepage) ? r.homepage : (CONFIG.site + r.name);
+      },
+      truncateDesc: function (desc) {
+        if (!desc) return '—';
+        if (desc.length > 140) return desc.slice(0, 137) + '…';
+        return desc;
+      },
+      metaParts: function (r) {
+        var parts = [];
+        if (r.language) {
+          parts.push({ t: 'lang', color: LANG_COLORS[r.language] || '#999', name: r.language });
+        }
+        if (r.stargazers_count > 0) {
+          parts.push({ t: 'stars', count: r.stargazers_count });
+        }
+        if (r.topics && r.topics.length) {
+          r.topics.slice(0, 3).forEach(function (t) {
+            parts.push({ t: 'tag', name: t });
+          });
+        }
+        if (r.created_at) {
+          parts.push({ t: 'time', display: timeAgo(r.created_at), title: formatDate(r.created_at) });
+        }
+        if (r.html_url) {
+          parts.push({ t: 'source', url: r.html_url });
+        }
+        return parts;
+      },
+      fetchApiPage: function (scrollAfter) {
+        var self = this;
+        var url = API + '&page=' + self.apiPage;
+        fetch(url)
+          .then(function (r) {
+            var next = false;
+            var link = r.headers.get('Link');
+            if (link) {
+              var links = link.split(',');
+              for (var i = 0; i < links.length; i++) {
+                if (links[i].indexOf('rel="next"') > -1) { next = true; break; }
+              }
+            }
+            self.hasMoreApi = next;
+            return r.ok ? r.json() : Promise.reject(r.status);
+          })
+          .then(function (repos) {
+            var filtered = repos.filter(function (r) { return (r.has_pages || isOvoHomepage(r.homepage)) && CONFIG.includeRepo(r); });
+            self.allRepos = self.allRepos.concat(filtered);
+            localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ ts: Date.now(), data: self.allRepos }));
+            self.apiPage++;
+            self.sliceRepos();
+            self.loading = false;
+            if (scrollAfter) {
+              Vue.nextTick(function () { self.scrollToCatalog(); });
+            }
+          })
+          .catch(function () {
+            self.error = true;
+            self.loading = false;
+          });
+      },
+      sliceRepos: function () {
+        var start = (this.page - 1) * this.perPage;
+        this.repos = this.allRepos.slice(start, start + this.perPage);
+      },
+      scrollToCatalog: function () {
+        var el = document.getElementById('catalog');
+        if (el) { el.scrollIntoView({ behavior: 'smooth' }); }
+      },
+      goPage: function (n) {
+        if (n < 1 || n > this.totalPages + 1) return;
+        var needMore = n * this.perPage > this.allRepos.length;
+        if (needMore && this.hasMoreApi) {
+          this.loading = true;
+          this.error = false;
+          this.page = n;
+          this.fetchApiPage(true);
+        } else {
+          this.page = Math.min(n, this.totalPages);
+          this.sliceRepos();
+          var self = this;
+          Vue.nextTick(function () { self.scrollToCatalog(); });
+        }
+      }
+    },
+    mounted: function () {
+      var cached = tryCache();
+      if (cached) {
+        this.allRepos = cached;
+        this.sliceRepos();
+        this.loading = false;
+        return;
+      }
+      this.fetchApiPage();
+    }
+  });
+
+  app.mount('#app');
+})();
+</script>
+</body>
+</html>

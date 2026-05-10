@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #fafaf8;
+    --ink: #1a1a1a;
+    --ink-light: #5c5c5c;
+    --rule: #d4cfc7;
+    --accent: #1a1a1a;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 720px;
+    padding: 8vw 6vw;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .masthead-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .masthead-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+
+  /* ── Headline ── */
+  .headline-block {
+    position: relative;
+  }
+
+  .headline-number {
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+    font-weight: 900;
+    font-size: clamp(7rem, 18vw, 13rem);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+
+  .ornament {
+    margin: 2rem 0 0 0.15rem;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  /* ── Lead ── */
+  .lead {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding-top: 0.5rem;
+  }
+
+  .lead-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .lead-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .lead-body {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--ink-light);
+  }
+
+  .lead-body p + p {
+    margin-top: 1rem;
+  }
+
+  /* ── Bottom Rule ── */
+  .foot-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .foot-rule-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .return-link {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.25s;
+  }
+
+  .return-link:hover {
+    opacity: 0.45;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 540px) {
+    .lead {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .page {
+      padding: 10vw 5vw;
+      gap: 2rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- Masthead -->
+    <div class="masthead">
+      <span class="masthead-line"></span>
+      <span class="masthead-label">Edition</span>
+      <span class="masthead-line"></span>
+    </div>
+
+    <!-- Headline -->
+    <div class="headline-block">
+      <h1 class="headline-number">404</h1>
+      <div class="ornament"></div>
+    </div>
+
+    <!-- Lead / Deck -->
+    <div class="lead">
+      <div>
+        <div class="lead-label">Dispatch</div>
+        <h2 class="lead-headline">The page you were looking for does not exist.</h2>
+      </div>
+      <div class="lead-body">
+        <p>It may have been moved, retired, or perhaps it never existed at all. Such is the nature of the web — a library whose shelves shift while you sleep.</p>
+        <p>We suggest you return to the front page and begin again.</p>
+      </div>
+    </div>
+
+    <!-- Foot -->
+    <div class="foot-rule">
+      <span class="foot-rule-line"></span>
+      <a href="/" class="return-link">Return Home</a>
+      <span class="foot-rule-line"></span>
+    </div>
+
+  </main>
+</body>
+</html>
