@@ -127,7 +127,7 @@ tailwind.config = {
       <div v-if="!loading && !error && repos.length" class="flex justify-center items-center gap-6">
         <button @click="goPage(page - 1)" :disabled="page <= 1" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Prev</button>
         <span class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim">Page {{ page }} / {{ totalPages }}</span>
-        <button @click="goPage(page + 1)" :disabled="page >= totalPages && !hasMoreApi" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Next</button>
+        <button @click="goPage(page + 1)" :disabled="page >= totalPages" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Next</button>
       </div>
 
     <!-- Footer -->
@@ -166,15 +166,12 @@ tailwind.config = {
     site: 'https://gh.ovo.re/',
     email: 'i@ovo.re',
     source: 'https://github.com/journey-ad/journey-ad.github.io',
-    cacheKey: 'gh-pages-index',
-    cacheTtl: 6 * 60 * 60 * 1000, // 6 hours
     // return false to exclude a repo from the index
     includeRepo: function (repo) {
       return !['journey-ad.github.io', 'ovo.re'].includes(repo.name);
     }
   };
 
-  var API = 'https://api.github.com/users/' + CONFIG.user + '/repos?type=owner&per_page=100&sort=created';
   function isOvoHomepage(url) {
 	    if (!url) return false;
 	    try {
@@ -210,16 +207,6 @@ tailwind.config = {
     return yyyy + '-' + MM + '-' + dd + ' ' + hh + ':' + mm + ':' + ss;
   }
 
-  function tryCache() {
-    try {
-      var raw = localStorage.getItem(CONFIG.cacheKey);
-      if (!raw) return null;
-      var entry = JSON.parse(raw);
-      if (Date.now() - entry.ts > CONFIG.cacheTtl) return null;
-      return entry.data;
-    } catch (_) { return null; }
-  }
-
   var app = Vue.createApp({
     data: function () {
       return {
@@ -229,8 +216,6 @@ tailwind.config = {
         error: false,
         page: 1,
         perPage: 10,
-        apiPage: 1,
-        hasMoreApi: false,
         CONFIG: CONFIG,
       };
     },
@@ -273,32 +258,19 @@ tailwind.config = {
         }
         return parts;
       },
-      fetchApiPage: function (scrollAfter) {
+      fetchRepos: function () {
         var self = this;
-        var url = API + '&page=' + self.apiPage;
-        fetch(url)
+        fetch('data/repos.json')
           .then(function (r) {
-            var next = false;
-            var link = r.headers.get('Link');
-            if (link) {
-              var links = link.split(',');
-              for (var i = 0; i < links.length; i++) {
-                if (links[i].indexOf('rel="next"') > -1) { next = true; break; }
-              }
-            }
-            self.hasMoreApi = next;
-            return r.ok ? r.json() : Promise.reject(r.status);
+            if (!r.ok) throw r.status;
+            return r.json();
           })
           .then(function (repos) {
-            var filtered = repos.filter(function (r) { return (r.has_pages || isOvoHomepage(r.homepage)) && CONFIG.includeRepo(r); });
-            self.allRepos = self.allRepos.concat(filtered);
-            localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ ts: Date.now(), data: self.allRepos }));
-            self.apiPage++;
+            self.allRepos = repos.filter(function (r) {
+              return (r.has_pages || isOvoHomepage(r.homepage)) && CONFIG.includeRepo(r);
+            });
             self.sliceRepos();
             self.loading = false;
-            if (scrollAfter) {
-              Vue.nextTick(function () { self.scrollToCatalog(); });
-            }
           })
           .catch(function () {
             self.error = true;
@@ -314,30 +286,15 @@ tailwind.config = {
         if (el) { el.scrollIntoView({ behavior: 'smooth' }); }
       },
       goPage: function (n) {
-        if (n < 1 || n > this.totalPages + 1) return;
-        var needMore = n * this.perPage > this.allRepos.length;
-        if (needMore && this.hasMoreApi) {
-          this.loading = true;
-          this.error = false;
-          this.page = n;
-          this.fetchApiPage(true);
-        } else {
-          this.page = Math.min(n, this.totalPages);
-          this.sliceRepos();
-          var self = this;
-          Vue.nextTick(function () { self.scrollToCatalog(); });
-        }
+        if (n < 1 || n > this.totalPages) return;
+        this.page = n;
+        this.sliceRepos();
+        var self = this;
+        Vue.nextTick(function () { self.scrollToCatalog(); });
       }
     },
     mounted: function () {
-      var cached = tryCache();
-      if (cached) {
-        this.allRepos = cached;
-        this.sliceRepos();
-        this.loading = false;
-        return;
-      }
-      this.fetchApiPage();
+      this.fetchRepos();
     }
   });
 

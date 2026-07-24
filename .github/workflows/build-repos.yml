@@ -1,0 +1,35 @@
+name: Build repos index
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/build-repos.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build data/repos.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p data
+          gh api --paginate -X GET users/journey-ad/repos \
+            -f type=owner -f per_page=100 -f sort=created --jq '.[]' \
+            | jq -s 'map({
+                id, name, description, homepage, html_url,
+                language, stargazers_count, topics, created_at, has_pages
+              })' > data/repos.json
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update repos index [skip ci]'
+          file_pattern: data/repos.json
