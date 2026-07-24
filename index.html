@@ -66,33 +66,38 @@ tailwind.config = {
     <!-- Header -->
     <header class="flex justify-between items-end pb-8 border-b border-rule max-sm:flex-col max-sm:items-start max-sm:gap-[0.35rem]">
       <h1 class="font-display font-semibold text-[clamp(1.3rem,2.2vw,1.6rem)] tracking-[-0.01em] text-ink">
-        a demo <em class="not-italic text-ink-dim font-normal">site</em>
+        {{ t('h1Main') }} <em class="not-italic text-ink-dim font-normal">{{ t('h1Sub') }}</em>
       </h1>
-      <span class="font-display text-[0.7rem] font-medium tracking-[0.08em] uppercase text-ink-dim">
-        {{ countText }}
-      </span>
+      <div class="flex items-center gap-4 max-sm:self-end">
+        <span class="font-display text-[0.7rem] font-medium tracking-[0.08em] uppercase text-ink-dim">
+          {{ countText }}
+        </span>
+        <div class="flex items-center gap-2 font-display text-[0.7rem] font-medium tracking-[0.08em]">
+          <button @click="toggleLang" class="appearance-none cursor-pointer text-ink-dim transition-colors duration-200 hover:text-ink">{{ lang === 'en' ? '[中文]' : '[En]' }}</button>
+        </div>
+      </div>
     </header>
 
     <!-- Note -->
     <p class="text-[1.3rem] leading-[1.6] text-ink-dim max-w-[36rem] max-sm:text-[1.15rem]">
-      An index of public repositories, updated on arrival.
+      {{ t('intro') }}
     </p>
 
     <!-- Catalog -->
     <section id="catalog" class="flex flex-col scroll-mt-[6vh]">
       <div class="grid grid-cols-[1fr_2fr] gap-8 pb-[0.85rem] border-b border-rule max-sm:grid-cols-1 max-sm:gap-1">
-        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">Project</span>
-        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">Description</span>
+        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">{{ t('colProject') }}</span>
+        <span class="font-display text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-dim">{{ t('colDescription') }}</span>
       </div>
 
       <!-- Loading -->
-      <div v-if="loading" class="py-8 text-[0.95rem] text-ink-fade italic">Loading&hellip;</div>
+      <div v-if="loading" class="py-8 text-[0.95rem] text-ink-fade italic">{{ t('loading') }}</div>
 
       <!-- Error -->
-      <div v-else-if="error" class="py-8 text-[0.95rem] text-[#b66]">Unable to fetch the index. Try again shortly.</div>
+      <div v-else-if="error" class="py-8 text-[0.95rem] text-[#b66]">{{ t('error') }}</div>
 
       <!-- Empty -->
-      <div v-else-if="!repos.length" class="py-8 text-[0.95rem] text-ink-fade italic">No affiliated projects found.</div>
+      <div v-else-if="!repos.length" class="py-8 text-[0.95rem] text-ink-fade italic">{{ t('empty') }}</div>
 
       <!-- Rows -->
       <div v-for="(r, i) in repos" :key="r.id"
@@ -116,7 +121,7 @@ tailwind.config = {
               <!-- time -->
               <span v-else-if="p.t === 'time'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap" :title="p.title">{{ p.display }}</span>
               <!-- source -->
-              <a v-else-if="p.t === 'source'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap text-ink-dim no-underline transition-colors duration-200 hover:text-ink" :href="p.url" target="_blank">source ↗</a>
+              <a v-else-if="p.t === 'source'" class="inline-flex items-center gap-[0.3em] whitespace-nowrap text-ink-dim no-underline transition-colors duration-200 hover:text-ink" :href="p.url" target="_blank">{{ p.label }} ↗</a>
             </template>
           </div>
         </div>
@@ -125,23 +130,24 @@ tailwind.config = {
 
     <!-- Pagination -->
       <div v-if="!loading && !error && repos.length" class="flex justify-center items-center gap-6">
-        <button @click="goPage(page - 1)" :disabled="page <= 1" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Prev</button>
-        <span class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim">Page {{ page }} / {{ totalPages }}</span>
-        <button @click="goPage(page + 1)" :disabled="page >= totalPages" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">Next</button>
+        <button @click="goPage(page - 1)" :disabled="page <= 1" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">{{ t('prev') }}</button>
+        <span class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim">{{ pageText }}</span>
+        <button @click="goPage(page + 1)" :disabled="page >= totalPages" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase border border-rule rounded-[2px] px-4 py-[0.45rem] text-ink-dim transition-colors duration-200 hover:text-ink hover:border-ink-fade disabled:opacity-30 disabled:cursor-default disabled:hover:text-ink-dim disabled:hover:border-rule">{{ t('next') }}</button>
       </div>
 
     <!-- Footer -->
     <footer class="flex justify-between items-baseline pt-6 border-t border-rule max-sm:flex-col max-sm:gap-3">
       <div class="flex gap-8 max-sm:gap-6">
-        <a href="/" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Index</a>
+        <a href="/" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">{{ t('navIndex') }}</a>
+        <a href="https://gh.ovo.re/star-list/" target="_blank" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">{{ t('navStars') }}</a>
         <template v-if="CONFIG.email">
-          <a :href="'mailto:' + CONFIG.email" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Letter</a>
+          <a :href="'mailto:' + CONFIG.email" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">{{ t('navLetter') }}</a>
         </template>
         <template v-if="CONFIG.source">
-          <a :href="CONFIG.source" target="_blank" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">Source</a>
+          <a :href="CONFIG.source" target="_blank" class="font-display text-[0.68rem] font-medium tracking-[0.08em] uppercase text-ink-dim no-underline transition-colors duration-200 hover:text-ink">{{ t('navSource') }}</a>
         </template>
       </div>
-      <span class="text-[0.8rem] text-ink-fade italic">Set by hand.</span>
+      <span class="text-[0.8rem] text-ink-fade italic normal-case tracking-normal">{{ t('tagline') }}</span>
     </footer>
 
   </main>
@@ -172,28 +178,55 @@ tailwind.config = {
     }
   };
 
+  var I18N = {
+    en: {
+      title: 'a demo site.',
+      h1Main: 'a demo', h1Sub: 'site',
+      intro: 'An index of public repositories, morning blossoms plucked at dusk.',
+      colProject: 'Project', colDescription: 'Description',
+      loading: 'Loading…',
+      error: 'Unable to fetch the index. Try again shortly.',
+      empty: 'No affiliated projects found.',
+      prev: 'Prev', next: 'Next', pageOf: 'Page {n} / {total}',
+      navIndex: 'Index', navLetter: 'Letter', navSource: 'Source', navStars: 'Stars',
+      tagline: 'Updated via GitHub Actions',
+      sourceLink: 'source',
+      justNow: 'just now', minAgo: '{n}m ago', hourAgo: '{n}h ago',
+      dayAgo: '{n}d ago', monthAgo: '{n}mo ago', yearAgo: '{n}y ago',
+      project: 'project', projects: 'projects',
+    },
+    zh: {
+      title: '一个 demo 站点。',
+      h1Main: '一个 demo', h1Sub: '站点',
+      intro: '一份公开仓库的清单，朝花夕拾。',
+      colProject: '项目', colDescription: '描述',
+      loading: '加载中…',
+      error: '暂时无法获取索引，请稍后再试。',
+      empty: '暂无关联项目。',
+      prev: '上一页', next: '下一页', pageOf: '第 {n} / {total} 页',
+      navIndex: '首页', navLetter: '信件', navSource: '源码', navStars: '星标',
+      tagline: '通过 GitHub Actions 自动更新',
+      sourceLink: '源码',
+      justNow: '刚刚', minAgo: '{n} 分钟前', hourAgo: '{n} 小时前',
+      dayAgo: '{n} 天前', monthAgo: '{n} 个月前', yearAgo: '{n} 年前',
+      project: '个项目', projects: '个项目',
+    }
+  };
+
+  function detectLang() {
+    try {
+      var saved = localStorage.getItem('lang');
+      if (saved) return saved;
+      return /^zh/i.test(navigator.language) ? 'zh' : 'en';
+    } catch (_) { return 'en'; }
+  }
+
   function isOvoHomepage(url) {
 	    if (!url) return false;
 	    try {
 	      var hostname = new URL(url).hostname;
 	      return hostname === 'ovo.re' || hostname.endsWith('.ovo.re');
 	    } catch (_) { return false; }
-  }
-
-  function timeAgo(dateStr) {
-    var now = Date.now();
-    var then = new Date(dateStr).getTime();
-    var diff = now - then;
-    var mins = Math.floor(diff / 60000);
-    if (mins < 1)  return 'just now';
-    if (mins < 60) return mins + 'm ago';
-    var hours = Math.floor(mins / 60);
-    if (hours < 24) return hours + 'h ago';
-    var days = Math.floor(hours / 24);
-    if (days < 30) return days + 'd ago';
-    var months = Math.floor(days / 30);
-    if (months < 12) return months + 'mo ago';
-    return Math.floor(months / 12) + 'y ago';
   }
 
   function formatDate(dateStr) {
@@ -216,6 +249,7 @@ tailwind.config = {
         error: false,
         page: 1,
         perPage: 10,
+        lang: detectLang(),
         CONFIG: CONFIG,
       };
     },
@@ -225,10 +259,23 @@ tailwind.config = {
       },
       countText: function () {
         var n = this.allRepos.length;
-        return n + ' project' + (n !== 1 ? 's' : '');
+        return n + ' ' + this.t(n === 1 ? 'project' : 'projects');
+      },
+      pageText: function () {
+        return this.t('pageOf', { n: this.page, total: this.totalPages });
       }
     },
     methods: {
+      t: function (key, vars) {
+        var dict = I18N[this.lang] || I18N.en;
+        var str = dict[key] != null ? dict[key] : '';
+        if (vars) {
+          Object.keys(vars).forEach(function (k) {
+            str = str.split('{' + k + '}').join(vars[k]);
+          });
+        }
+        return str;
+      },
       repoPreviewUrl: function (r) {
         return isOvoHomepage(r.homepage) ? r.homepage : (CONFIG.site + r.name);
       },
@@ -251,12 +298,31 @@ tailwind.config = {
           });
         }
         if (r.created_at) {
-          parts.push({ t: 'time', display: timeAgo(r.created_at), title: formatDate(r.created_at) });
+          parts.push({ t: 'time', display: this.timeAgo(r.created_at), title: formatDate(r.created_at) });
         }
         if (r.html_url) {
-          parts.push({ t: 'source', url: r.html_url });
+          parts.push({ t: 'source', url: r.html_url, label: this.t('sourceLink') });
         }
         return parts;
+      },
+      timeAgo: function (dateStr) {
+        var diff = Date.now() - new Date(dateStr).getTime();
+        var mins = Math.floor(diff / 60000);
+        if (mins < 1)  return this.t('justNow');
+        if (mins < 60) return this.t('minAgo', { n: mins });
+        var hours = Math.floor(mins / 60);
+        if (hours < 24) return this.t('hourAgo', { n: hours });
+        var days = Math.floor(hours / 24);
+        if (days < 30) return this.t('dayAgo', { n: days });
+        var months = Math.floor(days / 30);
+        if (months < 12) return this.t('monthAgo', { n: months });
+        return this.t('yearAgo', { n: Math.floor(months / 12) });
+      },
+      toggleLang: function () {
+        var next = this.lang === 'en' ? 'zh' : 'en';
+        this.lang = next;
+        try { localStorage.setItem('lang', next); } catch (_) {}
+        document.title = this.t('title');
       },
       fetchRepos: function () {
         var self = this;
@@ -294,6 +360,7 @@ tailwind.config = {
       }
     },
     mounted: function () {
+      document.title = this.t('title');
       this.fetchRepos();
     }
   });
