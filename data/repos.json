@@ -88,8 +88,8 @@
   {
     "id": 1275004123,
     "name": "lean-qr-verify",
-    "description": null,
-    "homepage": null,
+    "description": "lean-qr Babel ES5 Compatibility Fix",
+    "homepage": "",
     "html_url": "https://github.com/journey-ad/lean-qr-verify",
     "language": "JavaScript",
     "stargazers_count": 0,
@@ -746,7 +746,7 @@
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
     "language": "JavaScript",
-    "stargazers_count": 2973,
+    "stargazers_count": 2974,
     "topics": [
       "badge",
       "counter",
