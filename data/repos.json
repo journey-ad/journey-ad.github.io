@@ -421,7 +421,7 @@
     "homepage": "https://bitmagnet-next-web.vercel.app",
     "html_url": "https://github.com/journey-ad/Bitmagnet-Next-Web",
     "language": "TypeScript",
-    "stargazers_count": 262,
+    "stargazers_count": 263,
     "topics": [
       "bittorrent",
       "dht",
@@ -730,7 +730,7 @@
     "homepage": "https://chat.getloli.com/",
     "html_url": "https://github.com/journey-ad/chat-room",
     "language": "EJS",
-    "stargazers_count": 208,
+    "stargazers_count": 209,
     "topics": [
       "chatroom",
       "websocket",
