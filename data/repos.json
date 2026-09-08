@@ -1,5 +1,17 @@
 [
   {
+    "id": 1361249247,
+    "name": "jmcomic-ai",
+    "description": "禁漫天堂 Agent Skills / AI 原生 JMComic 助手：通过 MCP 与 Skills 将 JMComic 注入你的 AI Agent. / AI-powered JMComic assistant for seamless integration with AI Agents via MCP & Skills.",
+    "homepage": "https://pypi.org/project/jmcomic-ai/",
+    "html_url": "https://github.com/journey-ad/jmcomic-ai",
+    "language": null,
+    "stargazers_count": 0,
+    "topics": [],
+    "created_at": "2026-09-08T10:41:48Z",
+    "has_pages": false
+  },
+  {
     "id": 1301612459,
     "name": "GhostLaunch",
     "description": "GhostLaunch 是一款以计算器为伪装的 Android 应用隐藏启动工具",
