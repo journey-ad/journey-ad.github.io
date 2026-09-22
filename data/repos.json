@@ -260,7 +260,7 @@
     "id": 1095534831,
     "name": "panda-web-scrcpy",
     "description": "设备管理工具，Android投屏，安装、日志、 无需本地adb环境、在线投屏使用",
-    "homepage": "https://pandatestgrid.github.io/panda-web-scrcpy/",
+    "homepage": "https://adb.ovo.re",
     "html_url": "https://github.com/journey-ad/panda-web-scrcpy",
     "language": "Vue",
     "stargazers_count": 3,
