@@ -2,8 +2,8 @@
   {
     "id": 1388832948,
     "name": "adb-ws-bridge",
-    "description": "ADB 连接转发工具",
-    "homepage": null,
+    "description": "ADB 连接转发工具，搭配 https://github.com/journey-ad/panda-web-scrcpy 使用",
+    "homepage": "https://adb.ovo.re",
     "html_url": "https://github.com/journey-ad/adb-ws-bridge",
     "language": "Kotlin",
     "stargazers_count": 0,
@@ -770,7 +770,7 @@
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
     "language": "JavaScript",
-    "stargazers_count": 3091,
+    "stargazers_count": 3093,
     "topics": [
       "badge",
       "counter",
