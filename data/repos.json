@@ -1,5 +1,17 @@
 [
   {
+    "id": 1397580314,
+    "name": "MirageWallpaper",
+    "description": "The most perfect live wallpaper engine for macOS, supporting web/video/scene wallpaper",
+    "homepage": "https://mirage.simplehac.cn/",
+    "html_url": "https://github.com/journey-ad/MirageWallpaper",
+    "language": null,
+    "stargazers_count": 0,
+    "topics": [],
+    "created_at": "2026-09-30T10:15:07Z",
+    "has_pages": false
+  },
+  {
     "id": 1388832948,
     "name": "adb-ws-bridge",
     "description": "ADB 连接转发工具，搭配 https://github.com/journey-ad/panda-web-scrcpy 使用",
