@@ -1,5 +1,17 @@
 [
   {
+    "id": 1398931879,
+    "name": "AccessibilityLazyVStackPoC",
+    "description": "Minimal repro: one AX hit test on an element inside a SwiftUI LazyVStack hangs the macOS app's main thread on the next scroll",
+    "homepage": null,
+    "html_url": "https://github.com/journey-ad/AccessibilityLazyVStackPoC",
+    "language": "Swift",
+    "stargazers_count": 0,
+    "topics": [],
+    "created_at": "2026-10-01T02:10:54Z",
+    "has_pages": false
+  },
+  {
     "id": 1397580314,
     "name": "MirageWallpaper",
     "description": "The most perfect live wallpaper engine for macOS, supporting web/video/scene wallpaper",
