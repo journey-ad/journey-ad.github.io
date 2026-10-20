@@ -793,8 +793,8 @@
     "description": "Moe counter badge with multiple themes! - 多种风格可选的萌萌计数器",
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
-    "language": "JavaScript",
-    "stargazers_count": 3130,
+    "language": "TypeScript",
+    "stargazers_count": 3132,
     "topics": [
       "badge",
       "counter",
