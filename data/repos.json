@@ -30,7 +30,7 @@
     "homepage": "https://adb.ovo.re",
     "html_url": "https://github.com/journey-ad/adb-ws-bridge",
     "language": "Kotlin",
-    "stargazers_count": 0,
+    "stargazers_count": 1,
     "topics": [],
     "created_at": "2026-09-26T08:00:59Z",
     "has_pages": false
@@ -299,7 +299,7 @@
     "homepage": "https://adb.ovo.re",
     "html_url": "https://github.com/journey-ad/panda-web-scrcpy",
     "language": "Vue",
-    "stargazers_count": 3,
+    "stargazers_count": 4,
     "topics": [],
     "created_at": "2025-11-13T07:18:14Z",
     "has_pages": true
@@ -794,7 +794,7 @@
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
     "language": "TypeScript",
-    "stargazers_count": 3132,
+    "stargazers_count": 3133,
     "topics": [
       "badge",
       "counter",
