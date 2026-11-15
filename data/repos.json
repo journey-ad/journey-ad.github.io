@@ -2,11 +2,11 @@
   {
     "id": 1457992969,
     "name": "M5CardputerZero-CardBili",
-    "description": "适用于 M5Stack CardputerZero 的非官方 BiliBili 客户端，支持视频、弹幕、直播等丰富的功能",
+    "description": "适用于 M5Stack CardputerZero 的非官方 BiliBili 客户端，支持热门、推荐、动态、视频、弹幕、直播等",
     "homepage": "",
     "html_url": "https://github.com/journey-ad/M5CardputerZero-CardBili",
     "language": "Rust",
-    "stargazers_count": 2,
+    "stargazers_count": 3,
     "topics": [
       "bilibili",
       "cardputer",
@@ -815,7 +815,7 @@
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
     "language": "TypeScript",
-    "stargazers_count": 3160,
+    "stargazers_count": 3159,
     "topics": [
       "badge",
       "counter",
