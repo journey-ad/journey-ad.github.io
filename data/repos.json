@@ -2,12 +2,21 @@
   {
     "id": 1457992969,
     "name": "M5CardputerZero-CardBili",
-    "description": "哔哩哔哩客户端，支持视频浏览与弹幕播放",
-    "homepage": null,
+    "description": "适用于 M5Stack CardputerZero 的非官方 BiliBili 客户端，支持视频、弹幕、直播等丰富的功能",
+    "homepage": "",
     "html_url": "https://github.com/journey-ad/M5CardputerZero-CardBili",
     "language": "Rust",
-    "stargazers_count": 0,
-    "topics": [],
+    "stargazers_count": 2,
+    "topics": [
+      "bilibili",
+      "cardputer",
+      "cardputer-zero",
+      "m5stack",
+      "raspberry-pi-cm0",
+      "retro",
+      "rust",
+      "slint-ui"
+    ],
     "created_at": "2026-11-14T17:22:26Z",
     "has_pages": false
   },
