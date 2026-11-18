@@ -1,5 +1,17 @@
 [
   {
+    "id": 1460426067,
+    "name": "M5CardputerZero-FlightClub",
+    "description": "驾驶战机穿越虫洞，到达世界的另一端，从地表飞向宇宙，再驶向星球降落。自由探索、竞速、金币冲刺与空战，支持 Cardputer Zero 体感操控。",
+    "homepage": "",
+    "html_url": "https://github.com/journey-ad/M5CardputerZero-FlightClub",
+    "language": "Rust",
+    "stargazers_count": 0,
+    "topics": [],
+    "created_at": "2026-11-16T18:47:07Z",
+    "has_pages": false
+  },
+  {
     "id": 1459960150,
     "name": "packages",
     "description": null,
