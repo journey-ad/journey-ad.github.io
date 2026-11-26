@@ -842,7 +842,7 @@
     "homepage": "https://chat.getloli.com/",
     "html_url": "https://github.com/journey-ad/chat-room",
     "language": "EJS",
-    "stargazers_count": 204,
+    "stargazers_count": 203,
     "topics": [
       "chatroom",
       "websocket",
@@ -858,7 +858,7 @@
     "homepage": "https://count.getloli.com",
     "html_url": "https://github.com/journey-ad/Moe-Counter",
     "language": "TypeScript",
-    "stargazers_count": 3180,
+    "stargazers_count": 3181,
     "topics": [
       "badge",
       "counter",
@@ -947,7 +947,7 @@
     "homepage": "https://gh.ovo.re/pixiv-viewer/",
     "html_url": "https://github.com/journey-ad/pixiv-viewer",
     "language": "Vue",
-    "stargazers_count": 359,
+    "stargazers_count": 360,
     "topics": [],
     "created_at": "2020-04-12T21:23:29Z",
     "has_pages": true
@@ -1226,7 +1226,7 @@
     "homepage": null,
     "html_url": "https://github.com/journey-ad/Snow-Typecho-Plugin",
     "language": "PHP",
-    "stargazers_count": 76,
+    "stargazers_count": 75,
     "topics": [],
     "created_at": "2017-12-20T03:13:35Z",
     "has_pages": false
